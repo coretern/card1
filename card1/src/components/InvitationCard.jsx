@@ -361,9 +361,27 @@ const InvitationCard = () => {
                 <a
                   href={physicalCard}
                   download="WeddingInvitation_Rahul_Neha.webp"
-                  className="w-full py-3 rounded-full font-sans bold text-xs uppercase shadow-lg text-center"
-                  style={{ background: '#8b0000', color: '#fff', letterSpacing: '0.2em', textDecoration: 'none', display: 'block', marginTop: '0.5rem', cursor: 'pointer' }}
+                  className="w-full py-4 rounded-full font-sans bold text-xs uppercase text-center relative overflow-hidden"
+                  style={{ 
+                    background: 'linear-gradient(135deg, #8b0000, #6d0000)',
+                    color: '#fff', 
+                    letterSpacing: '0.2em', 
+                    textDecoration: 'none', 
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '0.6rem',
+                    marginTop: '0.5rem', 
+                    cursor: 'pointer',
+                    boxShadow: '0 6px 20px rgba(139,0,0,0.3)',
+                    border: '2px solid rgba(212,175,55,0.25)',
+                  }}
                 >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                    <polyline points="7 10 12 15 17 10" />
+                    <line x1="12" y1="15" x2="12" y2="3" />
+                  </svg>
                   Download Card
                 </a>
 

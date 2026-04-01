@@ -55,18 +55,18 @@ function App() {
         {!showCard ? (
           <motion.div
             key="landing"
-            initial={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 1.1, filter: 'blur(10px)' }}
-            transition={{ duration: 1.5, ease: "easeInOut" }}
+            initial={{ opacity: 1 }}
+            exit={{ opacity: 0, scale: 1.05, filter: 'blur(8px)' }}
+            transition={{ duration: 0.6, ease: "easeInOut" }}
           >
             <LandingPage onEnter={handleEnter} />
           </motion.div>
         ) : (
           <motion.div
             key="card"
-            initial={{ opacity: 0, scale: 0.9, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            transition={{ duration: 1.5, ease: "easeOut" }}
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
           >
             <InvitationCard />
           </motion.div>
