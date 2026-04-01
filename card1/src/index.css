@@ -230,6 +230,16 @@ body {
 .animate-bounce { animation: bounce 1s infinite; }
 @keyframes bounce { 0%, 100% { transform: translateY(-25%); } 50% { transform: translateY(0); } }
 
+.leading-tight { line-height: 1.25; }
+.leading-relaxed { line-height: 1.625; }
+.min-h-screen { min-height: 100vh; }
+.inline-block { display: inline-block; }
+.block { display: block; }
+.cursor-pointer { cursor: pointer; }
+.select-none { user-select: none; }
+.fill-current { fill: currentColor; }
+.object-cover { object-fit: cover; }
+
 .transition-all { transition: all 0.3s ease; }
 .no-underline { text-decoration: none !important; }
 .hover-bg-gold:hover { background-color: #d4af37; }
@@ -249,6 +259,11 @@ body {
 @media (min-width: 768px) {
   .md-block { display: block; }
   .md-flex-row { flex-direction: row; }
+  .md-text-left { text-align: left; }
+  .md-items-start { align-items: flex-start; }
+  .md-text-2xl { font-size: 1.5rem; }
+  .md-text-3xl { font-size: 1.875rem; }
+  .md-text-4xl { font-size: 2.25rem; }
   .md-text-5xl { font-size: 3rem; }
   .md-text-6xl { font-size: 3.75rem; }
   .md-text-7xl { font-size: 4.5rem; }

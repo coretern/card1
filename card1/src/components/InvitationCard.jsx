@@ -1,285 +1,382 @@
-import { useState } from 'react';
-import { motion, AnimatePresence, useScroll, useSpring } from 'framer-motion';
-import { useRef } from 'react';
+import { useState, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import confetti from 'canvas-confetti';
-import { MapPin, Calendar, Clock, Sparkles, Wand2, Flower, Flame, Heart, ChevronDown, CheckCircle2, PartyPopper, User, PenTool, Flower2, Brush, Feather, HeartIcon } from 'lucide-react';
+import { MapPin, Calendar, Clock, Flame, Flower2, Feather, Heart, Sparkles } from 'lucide-react';
 import couple from '../assets/couple.png';
-import rituals from '../assets/rituals.png';
 import magicCouple from '../assets/magic_thankyou.png';
 import physicalCard from '../assets/PhysicalCard.webp';
 
-const FloatingHeart = ({ delay }) => (
+const FloatingHeart = ({ delay, index }) => (
   <motion.div
-    initial={{ y: '110vh', x: Math.random() * 100 + '%', rotate: 0, opacity: 0 }}
-    animate={{
-      y: '-10vh',
-      x: (Math.random() * 10).toString() + '%',
-      rotate: [0, 45, -45, 0],
-      opacity: [1, 0.4]
-    }}
-    transition={{ duration: 15, repeat: Infinity, delay, ease: "linear" }}
-    className="fixed z-0 text-gold-faint"
-    style={{ pointerEvents: 'none' }}
+    initial={{ y: '110vh', x: `${5 + (index * 13) % 85}%`, opacity: 0 }}
+    animate={{ y: '-10vh', opacity: [0, 0.4, 0], rotate: [0, 30, -30, 0] }}
+    transition={{ duration: 12 + Math.random() * 5, repeat: Infinity, delay, ease: 'linear' }}
+    className="fixed pointer-events-none"
+    style={{ zIndex: 0 }}
   >
-    <Heart fill="currentColor" stroke="none" className="w-4 h-4 md-w-6 md-h-6" />
+    <Heart fill="currentColor" stroke="none" className="w-3 h-3" style={{ color: 'rgba(212,175,55,0.2)' }} />
   </motion.div>
-);
-
-const CeremonyItem = ({ title, date, time, icon: Icon, delay, isLast }) => (
-  <div className="relative flex flex-col items-center w-full mb-16 md-mb-24 last-mb-0 px-2 md-px-4">
-    {!isLast && (
-      <div className="absolute top-20 bottom-[-8rem] w-1 bg-gold opacity-30 left-50 center-x md-block" />
-    )}
-
-    <motion.div
-      initial={{ opacity: 0, scale: 0.9, y: 30 }}
-      whileInView={{ opacity: 1, scale: 1, y: 0 }}
-      transition={{ delay, duration: 0.8 }}
-      viewport={{ once: true }}
-      style={{ boxShadow: '0 25px 60px rgba(0,0,0,0.15)', backgroundColor: 'white' }}
-      className="relative z-10 p-6 md-p-10 rounded-[2rem] md-rounded-[3rem] border-2 border-gold flex flex-col items-center text-center w-full max-w-[320px] md-max-w-[380px] group overflow-hidden"
-    >
-      <div className="absolute top-0 right-0 w-16 md-w-24 h-16 md-h-24 opacity-15 pointer-events-none">
-        <svg viewBox="0 0 100 100" fill="#d4af37">
-          <path d="M100,0 L100,100 Q100,0 0,0 Z" />
-        </svg>
-      </div>
-
-      <div className="relative mb-6 md-mb-8 mt-[-4.5rem] md-mt-[-5.5rem]">
-        <div className="absolute inset-0 bg-gold rounded-full scale-125 opacity-20 blur-xl px-2" />
-        <div className="bg-maroon p-4 md-p-5 rounded-full shadow-2xl border-4 border-white relative z-10 flex items-center justify-center">
-          <Icon className="text-white w-8 h-8 md-w-9 md-h-9 stroke-[2.5]" />
-        </div>
-      </div>
-
-      <p className="font-sans text-gray-500 bold text-[9px] md-text-[11px] uppercase tracking-[0.3em] md-tracking-[0.45em] mb-4 md-mb-4 opacity-70 italic">{date}</p>
-
-      <div className="flex flex-col items-center gap-2 mb-6 md-mb-8 w-full">
-        <h3 className="font-serif text-3xl md-text-4xl text-maroon bold tracking-tight leading-tight px-2">{title}</h3>
-        <div className="flex items-center gap-3 mt-1">
-          <div className="h-px bg-gold opacity-30 w-6 md-w-10" />
-          <Heart className="w-3 h-3 md-w-4 md-h-4 text-gold fill-current" />
-          <div className="h-px bg-gold opacity-30 w-6 md-w-10" />
-        </div>
-      </div>
-
-      <div
-        style={{ boxShadow: 'inset 0 4px 10px rgba(0,0,0,0.05)' }}
-        className="bg-[#fefaf0] px-6 md-px-8 py-4 md-py-5 rounded-2xl border border-gold-faint w-full hover-bg-gold transition-all duration-500 group"
-      >
-        <p className="font-sans text-[8px] md-text-[10px] bold tracking-widest uppercase mb-1 opacity-50 transition-colors">Ceremony Time</p>
-        <p className="font-serif text-xl md-text-2xl italic tracking-wider transition-colors">{time}</p>
-      </div>
-    </motion.div>
-  </div>
 );
 
 const InvitationCard = () => {
   const [guestName, setGuestName] = useState('');
   const [isConfirmed, setIsConfirmed] = useState(false);
   const [showError, setShowError] = useState(false);
-  const containerRef = useRef(null);
-
-  const { scrollYProgress } = useScroll({ target: containerRef, offset: ["start end", "end start"] });
-  const scaleY = useSpring(scrollYProgress, { stiffness: 100, damping: 30, restDelta: 0.001 });
 
   const handleConfirm = () => {
     if (!guestName.trim()) { setShowError(true); return; }
     setIsConfirmed(true);
     confetti({ 
-      particleCount: 200, 
-      spread: 80, 
-      origin: { y: 0.6 }, 
-      colors: ['#d4af37', '#800000'],
-      zIndex: 10000
+      particleCount: 200, spread: 80, origin: { y: 0.6 }, 
+      colors: ['#d4af37', '#800000', '#ffffff'], zIndex: 10000
     });
   };
 
   const schedule = [
-    { title: "Tilak", date: "10th August 2026", time: "07:00 PM", icon: Flame, delay: 0.1 },
-    { title: "Mehandi", date: "11th August 2026", time: "03:00 PM onwards", icon: Feather, delay: 0.2 },
-    { title: "Haldi", date: "12th August 2026", time: "10:00 AM", icon: Flower2, delay: 0.3 },
-    { title: "Wedding (Shadi)", date: "12th August 2026", time: "07:00 PM", icon: Heart, delay: 0.4 }
+    { title: "Tilak Ceremony", date: "10th August 2026", time: "07:00 PM", icon: Flame, delay: 0.1 },
+    { title: "Mehandi Celebration", date: "11th August 2026", time: "03:00 PM", icon: Feather, delay: 0.2 },
+    { title: "Haldi Ceremony", date: "12th August 2026", time: "10:00 AM", icon: Flower2, delay: 0.3 },
+    { title: "Wedding Shadi", date: "12th August 2026", time: "07:00 PM", icon: Heart, delay: 0.4 }
   ];
 
   return (
-    <div className="min-h-screen flex flex-col items-center bg-white md-bg-luxury md-py-20 px-0 md-px-12 relative overflow-x-hidden">
-      {/* Floating Hearts Background */}
-      {[...Array(12)].map((_, i) => (
-        <FloatingHeart key={i} delay={i * 2} />
+    <div className="min-h-screen flex flex-col items-center px-4 py-16 relative overflow-x-hidden"
+      style={{ background: '#f5f0e8' }}
+    >
+      {/* Floating Hearts */}
+      {[...Array(8)].map((_, i) => (
+        <FloatingHeart key={i} delay={i * 1.8} index={i} />
       ))}
 
+      {/* ═══════ MAIN CARD ═══════ */}
       <motion.div
-        initial={{ y: 30, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 1 }}
-        className="relative max-w-5xl w-full bg-white px-2 md-px-24 py-8 md-py-20 md-border-4 border-gold md-rounded-[3rem] mx-auto z-10"
-        style={{ boxShadow: '0 40px 100px rgba(0,0,0,0.25)' }}
+        initial={{ y: 40, opacity: 0 }} animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.8 }}
+        className="relative max-w-5xl w-full bg-white overflow-hidden z-10"
+        style={{ borderRadius: '8px', boxShadow: '0 30px 60px -12px rgba(0,0,0,0.2), 0 0 0 1px rgba(212,175,55,0.08)' }}
       >
-        <div className="absolute top-0 left-0 w-full h-4 md-h-8 bg-gold opacity-10" />
+        {/* Top Gold Bar */}
+        <div style={{ height: '6px', background: 'linear-gradient(90deg, transparent 5%, #d4af37 30%, #d4af37 70%, transparent 95%)' }} />
 
-        <div className="text-center mb-16 md-mb-24 flex flex-col items-center">
-          <div className="flex justify-center mb-6 md-mb-8 gap-4 md-gap-6 items-center">
-            <div className="w-12 md-w-20 h-px bg-gold" />
-            <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }}>
-              <img src={magicCouple} alt="Magic Couple" className="w-20 h-20 md-w-28 md-h-28 drop-shadow-xl" />
+        {/* Inner Border */}
+        <div className="absolute" style={{ top: '1.5rem', left: '1.5rem', right: '1.5rem', bottom: '1.5rem', border: '1px solid rgba(212,175,55,0.06)', borderRadius: '4px', pointerEvents: 'none' }} />
+
+        {/* Header */}
+        <div className="flex flex-col items-center px-8" style={{ paddingTop: '4rem', paddingBottom: '2.5rem' }}>
+          <div className="relative w-full flex items-center justify-center mb-8">
+            <div className="flex-1" style={{ height: '1px', background: 'linear-gradient(90deg, transparent, rgba(212,175,55,0.4))' }} />
+            <motion.div
+              initial={{ scale: 0, rotate: -20 }}
+              animate={{ scale: 1, rotate: 0 }}
+              transition={{ delay: 0.3, type: 'spring' }}
+              className="mx-6 bg-white p-3 shadow-lg rounded-2xl"
+              style={{ border: '2px solid rgba(212,175,55,0.15)', marginTop: '-3rem' }}
+            >
+              <img src={magicCouple} alt="Couple" className="w-16 h-16" style={{ filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.1))' }} />
             </motion.div>
-            <div className="w-12 md-w-20 h-px bg-gold" />
+            <div className="flex-1" style={{ height: '1px', background: 'linear-gradient(270deg, transparent, rgba(212,175,55,0.4))' }} />
           </div>
-          <p className="font-sans italic text-2xl md-text-3xl text-maroon mb-2">Save the Date</p>
-          <h1 className="font-serif text-5xl md-text-9xl text-gold bold tracking-tight mb-6 md-mb-8 drop-shadow-md">Rahul & Neha</h1>
-          <div className="w-20 md-w-32 h-1 md-h-2 bg-gold mx-auto mb-10 md-mb-20 rounded-full" />
 
-          <div
-            style={{ boxShadow: '0 30px 80px rgba(0,0,0,0.2)' }}
-            className="flex flex-col md-flex-row items-stretch bg-white rounded-[2rem] md-rounded-[4rem] border-2 md-border-4 border-gold-faint mx-auto max-w-4xl overflow-hidden w-full"
-          >
-            <div className="relative md-w-[45%] bg-gold p-4 md-p-8 flex items-center justify-center min-h-[300px] md-min-h-[400px]">
-              <div className="absolute inset-0 border-4 md-border-8 border-white m-2 md-m-4 rounded-[1.5rem] md-rounded-[2.5rem] opacity-30 px-2" />
-              <div className="relative z-10 w-full h-full rounded-[1.2rem] md-rounded-[2rem] overflow-hidden shadow-2xl border-2 md-border-4 border-white px-2">
-                <img src={couple} alt="The Couple" className="w-full h-full object-cover transition-transform duration-2000" />
-              </div>
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="text-center">
+            <p className="font-sans text-xs uppercase bold mb-3" style={{ letterSpacing: '0.5em', color: 'rgba(139,0,0,0.3)' }}>— You're Invited —</p>
+            <h3 className="font-cursive text-3xl text-maroon mb-3">Save the Date</h3>
+            <h1 className="font-serif text-5xl text-gold bold tracking-tight italic mb-4" style={{ fontSize: 'clamp(2.8rem, 8vw, 5rem)' }}>Rahul & Neha</h1>
+            <div className="flex items-center justify-center gap-3">
+              <div style={{ width: '3rem', height: '1px', background: 'rgba(212,175,55,0.3)' }} />
+              <Heart size={14} fill="#d4af37" stroke="none" style={{ opacity: 0.5 }} />
+              <div style={{ width: '3rem', height: '1px', background: 'rgba(212,175,55,0.3)' }} />
             </div>
-
-            <div className="md-w-[55%] p-8 md-p-16 flex flex-col justify-center relative bg-white">
-              <div className="relative z-20">
-                <p className="font-sans uppercase tracking-[0.2em] text-maroon text-[9px] md-text-xs bold mb-8 md-mb-10 text-center md-text-left border-gold md-border-l-8 md-pl-8">With great pleasure, <br />we invite you to join us on <br />our journey of love</p>
-                <div className="space-y-10 md-space-y-12">
-                  <div className="flex flex-col md-flex-row items-center md-items-start gap-4 md-gap-8 text-center md-text-left">
-                    <div className="bg-maroon p-3 md-p-5 rounded-full md-rounded-2xl shadow-xl"><Calendar className="text-white w-6 h-6 md-w-8 md-h-8" /></div>
-                    <div className="flex flex-col items-center md-items-start">
-                      <p className="text-gray-900 bold font-serif text-2xl md-text-5xl leading-tight">12th August, 2026</p>
-                      <p className="text-gray-500 text-[9px] md-text-xs uppercase tracking-widest mt-2 font-sans opacity-70">Wednesday • 07:00 PM</p>
-                    </div>
-                  </div>
-                  <div className="flex flex-col md-flex-row items-center md-items-start gap-4 md-gap-8 text-center md-text-left">
-                    <div className="bg-maroon p-3 md-p-5 rounded-full md-rounded-2xl shadow-xl"><MapPin className="text-white w-6 h-6 md-w-8 md-h-8" /></div>
-                    <div className="flex flex-col items-center md-items-start">
-                      <p className="text-gray-900 bold font-serif text-xl md-text-4xl leading-tight">Grand Sapphire Palace</p>
-                      <p className="text-gray-600 text-[10px] md-text-lg italic mt-1 md-mt-2 font-sans opacity-80">South Mumbai, Maharashtra, India</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="mt-32 md-mt-48 relative px-2 flex flex-col items-center" ref={containerRef}>
-          <div className="text-center mb-24 md-mb-32">
-            <div className="bg-white inline-block px-8 py-3 rounded-full mb-6 border border-gold shadow-md">
-              <p className="font-sans text-maroon text-[10px] md-text-sm bold tracking-widest uppercase">Wedding Rituals</p>
-            </div>
-            <h2 className="font-serif text-4xl md-text-9xl text-maroon bold italic drop-shadow-sm">Ceremony Path</h2>
-            <div className="w-16 h-1 md-h-2 bg-gold mx-auto mt-6 md-mt-8 rounded-full" />
-          </div>
-
-          <div className="absolute top-48 md-top-64 bottom-0 left-50 center-x w-1 bg-gray-200/50 md-block">
-            <motion.div style={{ scaleY }} className="h-full w-full bg-gold origin-top" />
-          </div>
-
-          <div className="flex flex-col items-center w-full">
-            {schedule.map((item, index) => (
-              <CeremonyItem key={index} {...item} isLast={index === schedule.length - 1} />
-            ))}
-          </div>
-        </div>
-
-        <div className="mt-48 pt-24 border-t-4 border-gold-faint text-center relative z-20 flex flex-col items-center">
-          <motion.div
-            whileHover={{ y: -5 }}
-            className="bg-white px-10 md-px-16 py-6 md-py-8 border-2 md-border-4 border-gold rounded-full shadow-xl mb-12 md-mb-24 transform -translate-y-1/2 mt-[-4rem]"
-          >
-            <p className="font-serif italic text-4xl md-text-6xl text-maroon tracking-widest px-2">RSVP</p>
           </motion.div>
+        </div>
 
-          <div
-            style={{ boxShadow: '0 40px 100px rgba(0,0,0,0.25)' }}
-            className="relative bg-white p-6 md-p-20 rounded-[3rem] md-rounded-[4rem] border-2 md-border-8 border-white max-w-2xl w-full mx-auto flex flex-col items-center"
-          >
-            <div className="mb-12">
-              <div className="relative w-48 h-48 md-w-80 md-h-80 mx-auto">
-                <div className="absolute inset-0 bg-gold rounded-full blur-2xl opacity-20" />
-                <img src={rituals} alt="Rituals" className="w-full h-full object-cover rounded-full shadow-2xl border-4 md-border-8 border-white relative z-10" />
+        {/* Two-Column */}
+        <div className="flex flex-col md-flex-row" style={{ padding: '0 2rem 2.5rem' }}>
+          {/* Photo */}
+          <div className="w-full md-w-1-2" style={{ padding: '0.5rem' }}>
+            <div className="relative overflow-hidden" style={{ borderRadius: '6px' }}>
+              <img src={couple} alt="Couple" className="w-full object-cover" 
+                style={{ display: 'block', transition: 'transform 3s ease' }}
+                onMouseOver={e => e.currentTarget.style.transform = 'scale(1.05)'}
+                onMouseOut={e => e.currentTarget.style.transform = 'scale(1)'}
+              />
+              <div className="absolute" style={{ bottom: 0, left: 0, right: 0, height: '40%', background: 'linear-gradient(to top, rgba(139,0,0,0.6), transparent)', pointerEvents: 'none' }} />
+              <p className="absolute font-cursive text-3xl italic" style={{ bottom: '1.5rem', left: '50%', transform: 'translateX(-50%)', whiteSpace: 'nowrap', color: '#d4af37', textShadow: '0 2px 8px rgba(0,0,0,0.4)' }}>
+                Forever Begins Here
+              </p>
+            </div>
+          </div>
+
+          {/* Details */}
+          <div className="w-full md-w-1-2 flex flex-col justify-center text-center" style={{ padding: '2rem 1.5rem' }}>
+            <p className="font-sans text-xs bold text-maroon uppercase mb-8" style={{ letterSpacing: '0.15em', lineHeight: '2' }}>
+              WITH GREAT PLEASURE,<br />WE INVITE YOU TO JOIN US ON<br />OUR JOURNEY OF LOVE
+            </p>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+              <div className="flex flex-col items-center gap-4">
+                <div style={{ background: '#8b0000', padding: '0.75rem', borderRadius: '50%', boxShadow: '0 4px 12px rgba(139,0,0,0.3)' }}>
+                  <Calendar style={{ width: '1.5rem', height: '1.5rem', color: '#fff' }} />
+                </div>
+                <div>
+                  <h4 className="font-serif text-3xl text-gray-900 bold leading-tight italic">12th August, 2026</h4>
+                  <p className="font-sans text-xs uppercase" style={{ letterSpacing: '0.25em', color: '#999', marginTop: '0.25rem' }}>Wednesday • 07:00 PM</p>
+                </div>
               </div>
-              <p className="font-cursive text-4xl md-text-7xl text-maroon italic mt-8 md-mt-12 mb-4">"Join us in our celebration"</p>
-              <div className="w-24 h-1 md-h-2 bg-gold mx-auto rounded-full opacity-30" />
+
+              <div style={{ width: '100%', height: '1px', background: 'linear-gradient(90deg, transparent, rgba(212,175,55,0.15), transparent)' }} />
+
+              <div className="flex flex-col items-center gap-4">
+                <div style={{ background: '#8b0000', padding: '0.75rem', borderRadius: '50%', boxShadow: '0 4px 12px rgba(139,0,0,0.3)' }}>
+                  <MapPin style={{ width: '1.5rem', height: '1.5rem', color: '#fff' }} />
+                </div>
+                <div>
+                  <h4 className="font-serif text-3xl text-gray-900 bold leading-tight italic">Grand Sapphire Palace</h4>
+                  <p className="font-sans text-xs uppercase" style={{ letterSpacing: '0.25em', color: '#999', marginTop: '0.25rem' }}>South Mumbai, Maharashtra</p>
+                </div>
+              </div>
             </div>
 
-            {!isConfirmed && (
-              <div className="w-full flex flex-col items-center px-4 mt-8">
-                <div className="w-full max-w-sm relative mb-12">
-                  <div className="flex flex-col items-center">
-                    <p className="font-serif italic text-maroon text-sm md-text-base mb-2 tracking-wide text-center opacity-50">We would be honored to have your name</p>
-                    <div className="w-full relative px-2">
-                      <input
-                        type="text"
-                        placeholder="Enter your name"
-                        value={guestName}
-                        onChange={(e) => { setGuestName(e.target.value); if (e.target.value.trim()) setShowError(false); }}
-                        className={`w-full bg-transparent border-b-2 py-4 text-center font-serif text-2xl md-text-4xl text-maroon outline-none transition-all placeholder-italic ${showError ? 'border-red-600' : 'border-gold'}`}
-                      />
-                    </div>
-                  </div>
-
-                  {showError && (
-                    <p className="text-red-600 text-xs mt-4 font-sans uppercase tracking-widest bold text-center animate-pulse">
-                      * Required: Please share your name *
-                    </p>
-                  )}
-                </div>
-
-                <button
-                  onClick={handleConfirm}
-                  className="relative w-full max-w-xs rounded-full py-5 md-py-8 border-2 md-border-4 border-gold bg-maroon text-white font-serif text-lg md-text-2xl bold tracking-widest uppercase shadow-2xl transition-all hover-bg-gold"
-                >
-                  Confirm
-                </button>
-
-                <p className="mt-8 font-sans text-gray-500 text-[10px] md-text-xs uppercase tracking-[0.3em] opacity-50">Warmly awaiting your gracious presence</p>
-              </div>
-            )}
+            <div className="flex items-center justify-center gap-3 mt-10">
+              <div style={{ width: '2rem', height: '1px', background: 'rgba(212,175,55,0.25)' }} />
+              <p className="font-cursive text-2xl text-gold italic" style={{ opacity: 0.7 }}>Two souls, one love story</p>
+              <div style={{ width: '2rem', height: '1px', background: 'rgba(212,175,55,0.25)' }} />
+            </div>
           </div>
         </div>
       </motion.div>
 
+      {/* ═══════ CEREMONY CARDS ═══════ */}
+      <div className="max-w-5xl w-full mt-24 z-10">
+        <div className="text-center mb-16 flex flex-col items-center">
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="font-serif italic text-4xl text-maroon tracking-tight mb-4 bold"
+            style={{ fontSize: 'clamp(2rem, 6vw, 3rem)' }}
+          >
+            The Joyful Celebrations
+          </motion.h2>
+          <div className="flex items-center gap-4">
+            <div style={{ width: '4rem', height: '1px', background: 'rgba(212,175,55,0.35)' }} />
+            <Heart size={18} fill="#d4af37" stroke="none" className="animate-pulse" />
+            <div style={{ width: '4rem', height: '1px', background: 'rgba(212,175,55,0.35)' }} />
+          </div>
+        </div>
+
+        <style>{`
+          .ceremony-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 3rem;
+          }
+          @media (min-width: 768px) {
+            .ceremony-grid {
+              display: grid;
+              grid-template-columns: repeat(2, 1fr);
+              gap: 3rem 4rem;
+              position: relative;
+            }
+            .ceremony-grid::before {
+              content: '';
+              position: absolute;
+              left: 50%; top: 2rem; bottom: 2rem;
+              width: 2px;
+              background: linear-gradient(to bottom, transparent, #d4af37, #d4af37, transparent);
+              opacity: 0.12;
+              transform: translateX(-50%);
+            }
+            .ceremony-grid > :nth-child(even) { margin-top: 5rem; }
+          }
+          .ceremony-card {
+            position: relative;
+            background: white;
+            padding: 2.5rem 2rem;
+            border-radius: 1.5rem;
+            border: 1px solid rgba(212,175,55,0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            transition: all 0.5s cubic-bezier(0.25,0.46,0.45,0.94);
+            box-shadow: 0 4px 24px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04);
+            overflow: hidden;
+          }
+          .ceremony-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 4px;
+            background: linear-gradient(90deg, transparent, #8b0000, transparent);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+          }
+          .ceremony-card:hover::before { opacity: 1; }
+          .ceremony-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.08), 0 0 0 1px rgba(212,175,55,0.12);
+          }
+          .ceremony-num {
+            position: absolute;
+            top: 0.8rem; right: 1.2rem;
+            font-family: 'Playfair Display', serif;
+            font-size: 4rem; font-weight: 700;
+            color: rgba(212,175,55,0.05);
+            line-height: 1;
+            pointer-events: none;
+          }
+          .ceremony-icon {
+            width: 4.5rem; height: 4.5rem;
+            background: #8b0000;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            color: #d4af37;
+            box-shadow: 0 6px 16px rgba(139,0,0,0.25), 0 0 0 5px #f5f0e8, 0 0 0 7px rgba(212,175,55,0.12);
+            margin-bottom: 1.25rem;
+            transition: transform 0.5s ease;
+          }
+          .ceremony-card:hover .ceremony-icon { transform: scale(1.1); }
+          .ceremony-time {
+            display: inline-flex; align-items: center; gap: 0.4rem;
+            padding: 0.4rem 1.25rem;
+            background: rgba(139,0,0,0.04);
+            border: 1px solid rgba(212,175,55,0.1);
+            border-radius: 9999px;
+            font-family: 'Playfair Display', serif;
+            font-style: italic; font-size: 1.1rem; font-weight: 600;
+            color: #8b0000; letter-spacing: 0.1em;
+            transition: all 0.5s ease;
+          }
+          .ceremony-card:hover .ceremony-time {
+            background: #8b0000; color: #d4af37; border-color: #8b0000;
+          }
+        `}</style>
+
+        <div className="ceremony-grid">
+          {schedule.map((item, idx) => (
+            <motion.div
+              key={idx}
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: item.delay, duration: 0.7, ease: 'easeOut' }}
+              viewport={{ once: true, margin: '-50px' }}
+              className="ceremony-card"
+            >
+              <div className="ceremony-num">0{idx + 1}</div>
+              <div className="ceremony-icon">
+                <item.icon style={{ width: '1.8rem', height: '1.8rem' }} />
+              </div>
+              <h4 className="font-serif text-2xl text-maroon bold italic tracking-tight mb-2">{item.title}</h4>
+              <p className="font-sans text-xs uppercase bold mb-4" style={{ letterSpacing: '0.3em', color: 'rgba(139,0,0,0.35)' }}>{item.date}</p>
+              <div className="ceremony-time">
+                <Clock style={{ width: '0.9rem', height: '0.9rem' }} />
+                {item.time}
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+
+      {/* ═══════ RSVP SECTION ═══════ */}
+      <div className="max-w-5xl w-full mt-24 z-10">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="p-12 relative overflow-hidden shadow-2xl"
+          style={{ borderRadius: '2rem', background: 'linear-gradient(135deg, #8b0000, #5a0000)' }}
+        >
+          <div className="absolute inset-0" style={{ background: 'radial-gradient(circle at top, rgba(212,175,55,0.08), transparent)' }} />
+          <div className="relative flex flex-col items-center gap-10 text-white text-center">
+            <Heart fill="#d4af37" stroke="none" className="w-12 h-12 animate-pulse" />
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', alignItems: 'center' }}>
+              <h2 className="font-cursive text-5xl italic" style={{ color: '#d4af37' }}>Bless Us With</h2>
+              <h2 className="font-cursive text-5xl italic" style={{ color: '#d4af37' }}>Your Presence</h2>
+              <p className="font-serif italic text-sm" style={{ color: 'rgba(255,255,255,0.45)' }}>Enter your name & be a part of our forever</p>
+            </div>
+
+            <div style={{ width: '100%', maxWidth: '20rem' }}>
+              <input
+                type="text"
+                placeholder="Your Name"
+                value={guestName}
+                onChange={(e) => { setGuestName(e.target.value); if (e.target.value.trim()) setShowError(false); }}
+                className="w-full py-4 text-2xl text-center font-serif italic"
+                style={{ background: 'transparent', border: 'none', borderBottom: '2px solid rgba(212,175,55,0.25)', outline: 'none', color: '#fff', transition: 'border-color 0.3s' }}
+                onFocus={e => e.target.style.borderBottomColor = '#d4af37'}
+                onBlur={e => e.target.style.borderBottomColor = 'rgba(212,175,55,0.25)'}
+              />
+              {showError && <p className="text-xs mt-3 uppercase tracking-widest animate-pulse" style={{ color: '#ff8888' }}>* Please enter your name *</p>}
+            </div>
+
+            <button
+              onClick={handleConfirm}
+              className="w-full py-4 rounded-full font-serif bold text-lg uppercase shadow-2xl"
+              style={{ maxWidth: '20rem', background: '#d4af37', color: '#5a0000', letterSpacing: '0.25em', cursor: 'pointer', border: 'none' }}
+            >
+              Confirm Presence
+            </button>
+          </div>
+        </motion.div>
+      </div>
+
+      {/* Footer */}
+      <div className="text-center mt-24 mb-8 z-10">
+        <p className="italic font-serif text-xl tracking-widest" style={{ color: 'rgba(139,0,0,0.25)' }}>Celebrate the Beginning of Togetherness</p>
+      </div>
+
+      {/* ═══════ THANK YOU POPUP ═══════ */}
       <AnimatePresence>
         {isConfirmed && (
-          <div className="fixed inset-0 z-9999 flex items-center justify-center bg-black-faded p-4 md-p-10 backdrop-blur-md">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-9999 flex items-center justify-center p-6"
+            style={{ backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)', background: 'rgba(139,0,0,0.6)' }}
+            onClick={() => setIsConfirmed(false)}
+          >
             <motion.div
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.8, opacity: 0 }}
-              className="bg-white rounded-3xl md-rounded-5xl p-6 md-p-8 max-w-sm w-full text-center shadow-2xl border-2 md-border-8 border-gold relative flex flex-col items-center"
+              initial={{ scale: 0.7, opacity: 0, y: 40 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.7, opacity: 0, y: 40 }}
+              transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+              onClick={e => e.stopPropagation()}
+              className="relative bg-white p-8 text-center overflow-hidden"
+              style={{ borderRadius: '1.5rem', boxShadow: '0 40px 80px rgba(0,0,0,0.3)', maxWidth: '320px', width: '100%' }}
             >
-              <div className="absolute -top-20 left-50 center-x">
-                <div className="bg-gold p-3 md-p-5 rounded-full shadow-2xl border-4 border-white">
-                  <Heart className="text-white w-6 h-6 md-w-8 md-h-8" />
+              <div className="flex flex-col items-center gap-4">
+                <motion.div animate={{ scale: [1, 1.1, 1] }} transition={{ repeat: Infinity, duration: 2.5, ease: 'easeInOut' }}>
+                  <img src={magicCouple} alt="Couple" className="w-16 h-16" style={{ filter: 'drop-shadow(0 8px 16px rgba(0,0,0,0.15))' }} />
+                </motion.div>
+
+                <div>
+                  <h2 className="font-serif italic text-xl text-maroon leading-tight">Thanks for joining us,</h2>
+                  <h3 className="font-cursive text-4xl text-gold italic mt-1">{guestName}!</h3>
                 </div>
+
+                <p className="font-serif italic text-sm" style={{ color: 'rgba(139,0,0,0.5)', lineHeight: '1.6' }}>
+                  Your presence will truly light up<br />our celebration. We're so excited<br />to see you soon!
+                </p>
+
+                <a
+                  href={physicalCard}
+                  download="WeddingInvitation_Rahul_Neha.webp"
+                  className="w-full py-3 rounded-full font-sans bold text-xs uppercase shadow-lg text-center"
+                  style={{ background: '#8b0000', color: '#fff', letterSpacing: '0.2em', textDecoration: 'none', display: 'block', marginTop: '0.5rem', cursor: 'pointer' }}
+                >
+                  Download Card
+                </a>
+
+                <button
+                  onClick={() => setIsConfirmed(false)}
+                  className="font-sans text-xs uppercase bold text-maroon"
+                  style={{ letterSpacing: '0.15em', cursor: 'pointer', background: 'none', border: 'none', borderBottom: '1px solid rgba(139,0,0,0.3)', paddingBottom: '2px', marginTop: '0.25rem' }}
+                >
+                  Close with Love
+                </button>
               </div>
-              <h2 className="font-serif text-lg md-text-2xl text-maroon bold mb-2 text-center leading-tight mt-14">
-                Thanks for joining us, <br />
-                <span className="text-gold italic font-cursive text-3xl md-text-5xl block mt-6 capitalize">{guestName}!</span>
-              </h2>
-
-              <div className="w-10 h-px bg-gold-faint mx-auto mb-6" />
-
-              <p className="font-serif italic text-base md-text-xl text-maroon mb-10 text-center leading-relaxed px-4">
-                Your presence will truly light up <br />
-                our celebration. We're so excited <br />
-                to see you soon!
-              </p>
-
-              <a 
-                href={physicalCard} 
-                download="WeddingInvitation_Rahul_Neha.webp"
-                className="w-64 md-w-80 bg-maroon text-white py-4 md-py-6 rounded-full font-serif text-base md-text-xl bold shadow-xl hover-bg-gold transition-all uppercase tracking-widest block text-center mx-auto mb-8 no-underline"
-              >Download Card</a>
-
-              <button
-                onClick={() => setIsConfirmed(false)}
-                className="text-maroon opacity-50 text-xs bold uppercase tracking-widest hover:opacity-100 transition-opacity mb-4"
-              >Close with Love</button>
             </motion.div>
-          </div>
+          </motion.div>
         )}
       </AnimatePresence>
     </div>
