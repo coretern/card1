@@ -57,7 +57,7 @@ const LandingPage = ({ onEnter }) => {
           </h2>
 
           <h1 className="text-gold font-serif text-5xl md-text-7xl mb-12 bold tracking-tight">
-            Rahul & Sneha
+            Rahul & Neha
           </h1>
         </motion.div>
 
@@ -91,7 +91,7 @@ const LandingPage = ({ onEnter }) => {
           transition={{ delay: 2.5 }}
           className="mt-12 text-white font-sans uppercase tracking-widest text-xs"
         >
-          - AN AUGUST CELEBRATION 2026 -
+          - JOINING OF TWO HEARTS -
         </motion.p>
       </motion.div>
 

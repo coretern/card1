@@ -157,6 +157,9 @@ body {
 .-mt-16 { margin-top: -4rem; }
 .-mt-20 { margin-top: -5rem; }
 .-top-12 { top: -3rem; }
+.-top-14 { top: -3.5rem; }
+.-top-16 { top: -4rem; }
+.-top-20 { top: -5rem; }
 
 .text-white { color: white; }
 .text-maroon { color: #8b0000; }
@@ -216,6 +219,7 @@ body {
 .italic { font-style: italic; }
 .bold { font-weight: bold; }
 .uppercase { text-transform: uppercase; }
+.capitalize { text-transform: capitalize; }
 .tracking-widest { letter-spacing: 0.2rem; }
 .tracking-tight { letter-spacing: -0.025em; }
 
@@ -226,6 +230,7 @@ body {
 @keyframes bounce { 0%, 100% { transform: translateY(-25%); } 50% { transform: translateY(0); } }
 
 .transition-all { transition: all 0.3s ease; }
+.no-underline { text-decoration: none !important; }
 .hover-bg-gold:hover { background-color: #d4af37; }
 .hover-text-maroon:hover { color: #8b0000; }
 .focus-border-gold:focus { border-color: #d4af37; }
@@ -270,4 +275,18 @@ body {
 .underline-offset-8 { text-underline-offset: 8px; }
 .drop-shadow-2xl { filter: drop-shadow(0 25px 25px rgba(0, 0, 0, 0.15)); }
 .drop-shadow-xl { filter: drop-shadow(0 15px 15px rgba(0, 0, 0, 0.1)); }
-.drop-shadow-sm { filter: drop-shadow(0 1px 1px rgba(0,0,0,0.05)); }
+.z-9999 { z-index: 9999; }
+.backdrop-blur-md { backdrop-filter: blur(8px); }
+
+@media (min-width: 768px) {
+  .md-text-2xl { font-size: 1.5rem; }
+  .md-text-3xl { font-size: 1.875rem; }
+  .md-text-4xl { font-size: 2.25rem; }
+  .md-p-10 { padding: 2.5rem; }
+  .md-p-12 { padding: 3rem; }
+  .md-py-8 { padding-top: 2rem; padding-bottom: 2rem; }
+  .md-w-36 { width: 9rem; }
+  .md-w-40 { width: 10rem; }
+  .md-h-36 { height: 9rem; }
+  .md-h-40 { height: 10rem; }
+}
