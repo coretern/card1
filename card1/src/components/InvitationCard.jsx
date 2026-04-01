@@ -2,11 +2,28 @@ import { useState } from 'react';
 import { motion, AnimatePresence, useScroll, useSpring } from 'framer-motion';
 import { useRef } from 'react';
 import confetti from 'canvas-confetti';
-import { MapPin, Calendar, Clock, Sparkles, Wand2, Flower, Flame, Heart, ChevronDown, CheckCircle2, PartyPopper, User, PenTool, Flower2, Brush, Feather } from 'lucide-react';
+import { MapPin, Calendar, Clock, Sparkles, Wand2, Flower, Flame, Heart, ChevronDown, CheckCircle2, PartyPopper, User, PenTool, Flower2, Brush, Feather, HeartIcon } from 'lucide-react';
 import couple from '../assets/couple.png';
 import rituals from '../assets/rituals.png';
 import magicCouple from '../assets/magic_thankyou.png';
 import physicalCard from '../assets/PhysicalCard.webp';
+
+const FloatingHeart = ({ delay }) => (
+  <motion.div
+    initial={{ y: '110vh', x: Math.random() * 100 + '%', rotate: 0, opacity: 0 }}
+    animate={{
+      y: '-10vh',
+      x: (Math.random() * 10).toString() + '%',
+      rotate: [0, 45, -45, 0],
+      opacity: [1, 0.4]
+    }}
+    transition={{ duration: 15, repeat: Infinity, delay, ease: "linear" }}
+    className="fixed z-0 text-gold-faint"
+    style={{ pointerEvents: 'none' }}
+  >
+    <Heart fill="currentColor" stroke="none" className="w-4 h-4 md-w-6 md-h-6" />
+  </motion.div>
+);
 
 const CeremonyItem = ({ title, date, time, icon: Icon, delay, isLast }) => (
   <div className="relative flex flex-col items-center w-full mb-16 md-mb-24 last-mb-0 px-2 md-px-4">
@@ -86,12 +103,15 @@ const InvitationCard = () => {
   ];
 
   return (
-    <div className="min-h-screen flex flex-col items-center bg-[#E9E4D9] py-10 md-py-20 px-4 relative overflow-x-hidden">
-      <div className="fixed inset-0 opacity-10 pointer-events-none z-0" style={{ backgroundImage: `url(${rituals})`, backgroundSize: '400px', backgroundRepeat: 'repeat' }} />
+    <div className="min-h-screen flex flex-col items-center bg-white md-bg-luxury md-py-20 px-0 md-px-12 relative overflow-x-hidden">
+      {/* Floating Hearts Background */}
+      {[...Array(12)].map((_, i) => (
+        <FloatingHeart key={i} delay={i * 2} />
+      ))}
 
       <motion.div
         initial={{ y: 30, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 1 }}
-        className="relative max-w-5xl w-full bg-white px-4 md-px-24 py-12 md-py-20 border-2 md-border-4 border-gold rounded-[2rem] md-rounded-[3rem] mx-auto z-10"
+        className="relative max-w-5xl w-full bg-white px-2 md-px-24 py-8 md-py-20 md-border-4 border-gold md-rounded-[3rem] mx-auto z-10"
         style={{ boxShadow: '0 40px 100px rgba(0,0,0,0.25)' }}
       >
         <div className="absolute top-0 left-0 w-full h-4 md-h-8 bg-gold opacity-10" />
@@ -119,7 +139,7 @@ const InvitationCard = () => {
               </div>
             </div>
 
-            <div className="md-w-[55%] p-8 md-p-16 flex flex-col justify-center relative bg-[#fffcf5]">
+            <div className="md-w-[55%] p-8 md-p-16 flex flex-col justify-center relative bg-white">
               <div className="relative z-20">
                 <p className="font-sans uppercase tracking-[0.2em] text-maroon text-[9px] md-text-xs bold mb-8 md-mb-10 text-center md-text-left border-gold md-border-l-8 md-pl-8">With great pleasure, <br />we invite you to join us on <br />our journey of love</p>
                 <div className="space-y-10 md-space-y-12">
@@ -173,7 +193,7 @@ const InvitationCard = () => {
 
           <div
             style={{ boxShadow: '0 40px 100px rgba(0,0,0,0.25)' }}
-            className="relative bg-[#fffcf5] p-6 md-p-20 rounded-[3rem] md-rounded-[4rem] border-2 md-border-8 border-white max-w-2xl w-full mx-auto flex flex-col items-center"
+            className="relative bg-white p-6 md-p-20 rounded-[3rem] md-rounded-[4rem] border-2 md-border-8 border-white max-w-2xl w-full mx-auto flex flex-col items-center"
           >
             <div className="mb-12">
               <div className="relative w-48 h-48 md-w-80 md-h-80 mx-auto">

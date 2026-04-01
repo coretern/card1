@@ -1,37 +1,33 @@
 import { motion } from 'framer-motion';
+import { Heart } from 'lucide-react';
 import texture from '../assets/texture.png';
 import love from '../assets/love.png';
 
-const FloatingPetal = ({ delay }) => (
+const FloatingHeart = ({ delay }) => (
   <motion.div
-    initial={{ y: -100, x: Math.random() * 400 - 200, rotate: 0, opacity: 0 }}
+    initial={{ y: '110vh', x: Math.random() * 100 + '%', rotate: 0, opacity: 0 }}
     animate={{
-      y: ['110vh', '-10vh'],
-      x: [Math.random() * 100, Math.random() * -100],
+      y: '-10vh',
+      x: (Math.random() * 10).toString() + '%',
       rotate: [0, 360],
       opacity: [1, 0.4]
     }}
     transition={{ duration: 15, repeat: Infinity, delay, ease: "linear" }}
-    className="absolute w-4 h-4 rounded-full bg-white opacity-40 blur-[1px]"
-    style={{ filter: 'drop-shadow(0 0 10px rgba(212, 175, 55, 0.3))' }}
-  />
+    className="absolute text-gold-faint"
+    style={{ pointerEvents: 'none' }}
+  >
+    <Heart fill="currentColor" stroke="none" className="w-4 h-4 md-w-6 md-h-6" />
+  </motion.div>
 );
 
 const LandingPage = ({ onEnter }) => {
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-maroon overflow-hidden">
-      {/* Dynamic Background */}
-      <div
-        className="absolute inset-0 opacity-40 bg-cover bg-center transition-transform duration-[10000ms] hover:scale-105"
-        style={{ backgroundImage: `url(${texture})` }}
-      />
+    <div className="fixed inset-0 flex items-center justify-center bg-luxury overflow-hidden">
 
-      {/* LUXURY VIGNETTE OVERLAY */}
-      <div className="absolute inset-0 bg-gradient-radial from-transparent to-black opacity-60 pointer-events-none" />
 
-      {/* Floating Sparkles/Petals */}
+      {/* Floating Hearts Background */}
       {[...Array(12)].map((_, i) => (
-        <FloatingPetal key={i} delay={i * 2} />
+        <FloatingHeart key={i} delay={i * 2} />
       ))}
 
       {/* Main Content Card - Soft Glassmorphism */}
@@ -52,7 +48,7 @@ const LandingPage = ({ onEnter }) => {
             <div className="w-16 h-px bg-gold" />
           </div>
 
-          <h2 className="text-white font-cursive text-4xl md-text-5xl mb-4 italic tracking-widest">
+          <h2 className="text-maroon font-cursive text-4xl md-text-5xl mb-4 italic tracking-widest">
             The Wedding of
           </h2>
 
@@ -89,7 +85,7 @@ const LandingPage = ({ onEnter }) => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 0.6 }}
           transition={{ delay: 2.5 }}
-          className="mt-12 text-white font-sans uppercase tracking-widest text-xs"
+          className="mt-12 text-maroon font-sans uppercase tracking-widest text-xs"
         >
           - JOINING OF TWO HEARTS -
         </motion.p>

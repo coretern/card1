@@ -15,7 +15,7 @@
 
 body {
   font-family: 'Montserrat', sans-serif;
-  background-color: #fdf5e6;
+  background-color: #ffffff;
   color: #2c2c2c;
   overflow-x: hidden;
 }
@@ -214,6 +214,7 @@ body {
 .bg-gold-faint { background-color: rgba(212, 175, 55, 0.1); }
 .bg-gray-100 { background-color: #f3f4f6; }
 .bg-black-faded { background-color: rgba(0,0,0,0.6); }
+.bg-luxury { background-color: #f0e6d2; }
 .bg-red-50 { background-color: #fef2f2; }
 
 .italic { font-style: italic; }
@@ -254,6 +255,7 @@ body {
   .md-text-8xl { font-size: 6rem; }
   .md-px-20 { padding-left: 5rem; padding-right: 5rem; }
   .md-w-1-2 { width: 50%; }
+  .md-bg-luxury { background-color: #f0e6d2 !important; }
 }
 .md-block { display: none; }
 
