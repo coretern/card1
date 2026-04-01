@@ -24,65 +24,42 @@ const FloatingStar = ({ delay, index }) => (
 
 /* ───────── REVEAL BUTTON ───────── */
 const RevealButton = ({ onClick }) => (
-  <motion.div
-    className="relative inline-block"
-    whileHover={{ scale: 1.06 }}
-    whileTap={{ scale: 0.96 }}
+  <motion.button
+    whileHover={{ scale: 1.05, boxShadow: '0 10px 40px rgba(212,165,116,0.35)' }}
+    whileTap={{ scale: 0.95 }}
+    onClick={onClick}
+    className="relative flex items-center justify-center gap-3 rounded-full font-sans font-bold uppercase cursor-pointer overflow-hidden mx-auto"
+    style={{
+      padding: '1.1rem 2.8rem',
+      background: 'linear-gradient(90deg, #b48555, #d4a574, #f8dfb6, #d4a574, #b48555)',
+      backgroundSize: '200% auto',
+      color: '#0a1628',
+      border: 'none',
+      letterSpacing: '0.2em',
+      fontSize: '0.8rem',
+      boxShadow: '0 6px 20px rgba(0,0,0,0.3)',
+      width: '100%',
+      maxWidth: '280px'
+    }}
+    animate={{ backgroundPosition: ['0% center', '200% center'] }}
+    transition={{ duration: 4, repeat: Infinity, ease: 'linear' }}
   >
-    {/* Animated outer glow ring */}
     <motion.div
-      className="absolute inset-0 rounded-full"
-      style={{ margin: '-3px', background: 'linear-gradient(135deg, var(--rose-gold), transparent, var(--rose-light), transparent)', opacity: 0.4 }}
-      animate={{ rotate: [0, 360] }}
-      transition={{ duration: 6, repeat: Infinity, ease: 'linear' }}
-    />
-    
-    {/* Pulsing glow behind */}
-    <motion.div
-      className="absolute inset-0 rounded-full"
-      style={{ margin: '-8px', background: 'radial-gradient(circle, rgba(212,165,116,0.15), transparent)', filter: 'blur(10px)' }}
-      animate={{ scale: [1, 1.15, 1], opacity: [0.3, 0.6, 0.3] }}
-      transition={{ duration: 2.5, repeat: Infinity }}
-    />
-
-    <button
-      onClick={onClick}
-      className="relative flex items-center gap-4 px-10 py-5 rounded-full font-sans font-bold uppercase cursor-pointer overflow-hidden"
-      style={{
-        background: 'linear-gradient(135deg, var(--rose-gold), #c4985e)',
-        color: 'var(--navy)',
-        letterSpacing: '0.25em',
-        border: '2px solid rgba(255,255,255,0.15)',
-        boxShadow: '0 12px 40px rgba(212,165,116,0.3), inset 0 1px 0 rgba(255,255,255,0.2)',
-        fontSize: '0.8rem',
-      }}
+      animate={{ rotate: [0, 15, -15, 0] }}
+      transition={{ duration: 2, repeat: Infinity }}
     >
-      {/* Envelope Icon */}
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="relative z-10">
-        <rect width="20" height="16" x="2" y="4" rx="2" />
-        <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
-      </svg>
-      
-      <span className="relative z-10">Open Invitation</span>
-      
-      {/* Star accent */}
-      <motion.div
-        animate={{ rotate: [0, 360], scale: [0.8, 1.2, 0.8] }}
-        transition={{ duration: 3, repeat: Infinity }}
-        className="relative z-10"
-      >
-        <Star size={14} fill="var(--navy)" stroke="none" style={{ opacity: 0.4 }} />
-      </motion.div>
+      <Sparkles size={16} fill="rgba(10,22,40,0.8)" stroke="none" />
+    </motion.div>
 
-      {/* Shimmer sweep */}
-      <motion.div
-        className="absolute inset-0"
-        style={{ background: 'linear-gradient(105deg, transparent 35%, rgba(255,255,255,0.35) 50%, transparent 65%)' }}
-        animate={{ x: ['-150%', '200%'] }}
-        transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut', repeatDelay: 1 }}
-      />
-    </button>
-  </motion.div>
+    <span className="relative z-10 pt-px">Open Invitation</span>
+
+    <motion.div
+      animate={{ rotate: [0, -15, 15, 0] }}
+      transition={{ duration: 2, repeat: Infinity }}
+    >
+      <Sparkles size={16} fill="rgba(10,22,40,0.8)" stroke="none" />
+    </motion.div>
+  </motion.button>
 );
 
 /* ───────── MAIN APP ───────── */
