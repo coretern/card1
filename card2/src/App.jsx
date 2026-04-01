@@ -26,11 +26,22 @@ const RevealButton = ({ onClick }) => (
     whileHover={{ scale: 1.05, boxShadow: '0 0 30px rgba(212, 175, 55, 0.5)' }}
     whileTap={{ scale: 0.95 }}
     onClick={onClick}
-    className="px-12 py-5 bg-emerald text-white rounded-full font-serif font-bold text-xl uppercase tracking-royal relative overflow-hidden group shadow-2xl transition-all"
-    style={{ cursor: 'pointer' }}
+    className="bg-emerald text-white font-serif font-bold uppercase relative overflow-hidden group shadow-2xl transition-all"
+    style={{ 
+      cursor: 'pointer',
+      padding: '1.2rem 2.5rem',
+      borderRadius: '9999px',
+      fontSize: 'clamp(0.9rem, 4.5vw, 1.25rem)',
+      letterSpacing: '0.2em',
+      border: '1px solid rgba(212, 175, 55, 0.3)',
+      width: '100%',
+      maxWidth: '300px',
+      margin: '0 auto',
+      display: 'block'
+    }}
   >
-    <span className="relative z-10">Reveal Invitation</span>
-    <div className="absolute inset-0 bg-gold/20 translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
+    <span className="relative z-10 block text-center">Reveal Invitation</span>
+    <div className="absolute inset-0 translate-y-full group-hover:translate-y-0 transition-transform duration-500" style={{ background: 'rgba(212, 175, 55, 0.2)' }} />
   </motion.button>
 );
 
