@@ -25,40 +25,52 @@ const FloatingStar = ({ delay, index }) => (
 /* ───────── REVEAL BUTTON ───────── */
 const RevealButton = ({ onClick }) => (
   <motion.button
-    whileHover={{ scale: 1.05, boxShadow: '0 10px 40px rgba(212,165,116,0.35)' }}
-    whileTap={{ scale: 0.95 }}
     onClick={onClick}
-    className="relative flex items-center justify-center gap-3 rounded-full font-sans font-bold uppercase cursor-pointer overflow-hidden mx-auto"
+    whileHover={{ scale: 1.04, boxShadow: '0 8px 30px rgba(212,165,116,0.2)' }}
+    whileTap={{ scale: 0.96 }}
+    className="relative overflow-hidden mx-auto cursor-pointer"
     style={{
-      padding: '1.1rem 2.8rem',
-      background: 'linear-gradient(90deg, #b48555, #d4a574, #f8dfb6, #d4a574, #b48555)',
-      backgroundSize: '200% auto',
-      color: '#0a1628',
-      border: 'none',
-      letterSpacing: '0.2em',
-      fontSize: '0.8rem',
-      boxShadow: '0 6px 20px rgba(0,0,0,0.3)',
-      width: '100%',
-      maxWidth: '280px'
+      borderRadius: '4px',
+      border: '1px solid rgba(212,165,116,0.4)',
+      background: 'linear-gradient(160deg, rgba(21,34,56,0.98), rgba(12,24,44,0.98))',
+      padding: '0.75rem 2rem',
+      backdropFilter: 'blur(20px)',
+      boxShadow: '0 4px 20px rgba(0,0,0,0.35), inset 0 1px 0 rgba(212,165,116,0.08)',
+      transform: 'translateY(-13px)',
     }}
-    animate={{ backgroundPosition: ['0% center', '200% center'] }}
-    transition={{ duration: 4, repeat: Infinity, ease: 'linear' }}
   >
+    {/* Shimmer sweep */}
     <motion.div
-      animate={{ rotate: [0, 15, -15, 0] }}
-      transition={{ duration: 2, repeat: Infinity }}
-    >
-      <Sparkles size={16} fill="rgba(10,22,40,0.8)" stroke="none" />
-    </motion.div>
+      className="absolute inset-0 pointer-events-none"
+      style={{
+        background: 'linear-gradient(105deg, transparent 30%, rgba(212,165,116,0.1) 50%, transparent 70%)',
+      }}
+      animate={{ x: ['-100%', '200%'] }}
+      transition={{ duration: 2.5, repeat: Infinity, ease: 'linear', repeatDelay: 1.5 }}
+    />
 
-    <span className="relative z-10 pt-px">Open Invitation</span>
+    {/* Content */}
+    <div className="relative flex items-center gap-2" style={{ zIndex: 1 }}>
+      <motion.svg
+        width="14" height="11" viewBox="0 0 24 20" fill="none"
+        animate={{ y: [0, -1.5, 0] }}
+        transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+      >
+        <rect x="1" y="1" width="22" height="18" rx="2" stroke="rgba(212,165,116,0.85)" strokeWidth="1.8" />
+        <path d="M1 5l11 8 11-8" stroke="rgba(212,165,116,0.85)" strokeWidth="1.8" strokeLinecap="round" />
+      </motion.svg>
 
-    <motion.div
-      animate={{ rotate: [0, -15, 15, 0] }}
-      transition={{ duration: 2, repeat: Infinity }}
-    >
-      <Sparkles size={16} fill="rgba(10,22,40,0.8)" stroke="none" />
-    </motion.div>
+      <span style={{ color: 'rgba(212,165,116,0.9)', letterSpacing: '0.3em', fontSize: '0.65rem', fontWeight: 600, textTransform: 'uppercase', fontFamily: 'var(--font-sans)' }}>
+        Open Invitation
+      </span>
+
+      <motion.div
+        animate={{ rotate: [0, 360] }}
+        transition={{ duration: 5, repeat: Infinity, ease: 'linear' }}
+      >
+        <Star size={10} fill="rgba(212,165,116,0.6)" stroke="none" />
+      </motion.div>
+    </div>
   </motion.button>
 );
 
