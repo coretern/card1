@@ -1,0 +1,76 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-maroon: #800000;
+  --color-burgundy: #4D0000;
+  --color-gold: #D4AF37;
+  --color-gold-light: #F9F6EE;
+  --font-serif: "Lora", serif;
+  --font-cursive: "Great Vibes", cursive;
+}
+
+:root {
+  --background: #FFF9F2;
+  --foreground: #1A1A1A;
+  --accent: #800000;
+  --rose-gold: #D4AF37;
+  --navy: #4D0000;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  overflow-x: hidden;
+  font-family: var(--font-serif);
+}
+
+.text-gradient {
+  background: linear-gradient(135deg, #800000, #D4AF37);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.luxury-card {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+}
+
+@keyframes rotate-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-spin-slow {
+  animation: rotate-slow 12s linear infinite;
+}
+
+.star-particle {
+  position: absolute;
+  pointer-events: none;
+  animation: star-float linear infinite;
+}
+
+
+/* Aggressively hide Next.js Dev Indicator, Static Indicator, and Overlays */
+next-route-announcer,
+#nextjs-portal,
+[data-nextjs-scroll-focus-boundary],
+[data-nextjs-dev-overlay],
+[data-nextjs-static-indicator],
+[data-nextjs-toast-container],
+.nextjs-toast-errors-parent,
+#next-live-toast {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  opacity: 0 !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+
+
+
+
+
